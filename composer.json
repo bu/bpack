@@ -1,0 +1,20 @@
+{
+    "name": "bu/risu-storage",
+    "description": "A personal information management",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Buwei Chiu",
+            "email": "bu@bu.idv.tw"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+	"autoload": {
+		"psr-4": {
+			"App\\": "app/",
+			"BPack\\": "bpack/"
+		}
+	}
+}
