@@ -3,8 +3,10 @@
 require __DIR__ . "/vendor/autoload.php";
 
 $app = new bPack\Foundation([
+    // app
     "timezone" => "Asia/Taipei",
     "devMode" => true,
+    "rootDir" => __DIR__,
 ]);
 
 try {
