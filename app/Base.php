@@ -1,7 +1,9 @@
 <?php
 namespace App;
 
-class BaseController extends bPack\Controller {
+use \bPack;
+
+class Base extends bPack\Controller {
 
 
 

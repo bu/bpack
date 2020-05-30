@@ -1,12 +1,8 @@
 <?php
 namespace bPack;
 
-interface Request {
-
-}
-
 // TODO: PSR-7 should apply here
-class RequestImpl implements Request {
+class Request implements Protocol\Request {
 
     public function get(string $key, $default_value = null, $options = array() ) {
         return $this->extractValue("GET", $default_value, $options);
