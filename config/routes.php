@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 return function (bPack\Router\Mux &$r) {
     $r->use(new App\Middleware\Dummy);

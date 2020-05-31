@@ -1,11 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 namespace App;
 
 use \bPack;
 
-class Base extends bPack\Controller {
-
-
-
-
-}
+class Base extends bPack\Controller {}
