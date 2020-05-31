@@ -2,13 +2,20 @@
 namespace bPack;
 
 use \Reflection, \ReflectionClass;
-class Dispatcher implements Protocol\Dispatcher{
+class Dispatcher implements Protocol\Dispatcher, Protocol\Module {
     protected Foundation $app;
 
-    public function __construct(Foundation $app) {
+
+    // as module
+    public function getIdentitifer():string {
+        return "dispatcher";
+    }
+
+    public function setApplication(Foundation $app): void {
         $this->app = $app;
     }
 
+    //
     public function dispatch(Protocol\RouteDestination $route):Protocol\Response {
         $currentChainTarget = null;
 

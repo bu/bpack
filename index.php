@@ -3,16 +3,12 @@
 // load everything
 require __DIR__ . "/vendor/autoload.php";
 
-$app = new bPack\Foundation([
-    // app
-    "timezone" => "Asia/Taipei",
-    "devMode" => true,
-    "rootDir" => __DIR__,
+//
+$app = new bPack\Foundation;
 
-    // router
-    "router.routesFile" => __DIR__ . "/config/routes.php",
-    "router.autoloadRoutes" => true,
-]);
+// load feature we need
+$app->load(new bPack\Packages\Routing);
+$app->load(new bPack\Database);
 
 //
 $dest = $app->router->route(
@@ -22,9 +18,7 @@ $dest = $app->router->route(
 
 // global wrapper in case any error occured
 try {
-    $response = $app->dispatcher->dispatch($dest);
-    $response->send();
-
+    $app->dispatcher->dispatch($dest)->send();
     $app->terminate();
 } catch (\Exception $e) {
     $app->isDevMode() && var_dump($e);

@@ -3,25 +3,26 @@ namespace bPack;
 
 class Foundation
 {
-    public Protocol\Router $router;
-    public Protocol\Config $config;
-    public Protocol\Dispatcher $dispatcher;
+    public \Dotenv\Dotenv $config;
 
-    public function __construct($options)
+    final function rootpath($path = null):string {
+        if($path === null) {
+            return realpath(__DIR__ . "/../");
+        }
+
+        return realpath(__DIR__ . "/../" . $path);
+    }
+
+    public function __construct($options = array())
     {
-        $this->config = new Config($this);
-        $this->router = new Router($this);
-        $this->dispatcher = new Dispatcher($this);
-
-        $this->config->batch(array_merge(
-            (array) new FoundationDefaultConfig,
-            $options
-        ));
+        $this->config = \Dotenv\Dotenv::createImmutable( $this->rootpath() );
+        $this->config->load();
+        $this->config->required(["TIMEZONE", "ENV"]);
     }
 
     public function isDevMode(): bool
     {
-        return (bool) $this->config->get("devMode", false);
+        return (strtoupper($_ENV["ENV"]) == "dev");
     }
 
     public function terminate():void {
@@ -31,10 +32,22 @@ class Foundation
 
         exit;
     }
-}
 
-final class FoundationDefaultConfig {
-    public string $timezone = "UTC";
-    public bool $devMode = false;
-    public string $rootDir = __DIR__ . "/../";
+    // service part
+    public function load(Protocol\Module $mod):bool {
+        if(isset($this->{$mod->getIdentitifer()})) {
+            return true;
+        }
+
+        $this->{$mod->getIdentitifer()} = $mod;
+        $mod->setApplication($this);
+
+        return true;
+    }
+
+    public function unload(Protocol\Module $mod):bool {
+        unset($this->{$mod->getIdentitifer()});
+
+        return true;
+    }
 }

@@ -3,7 +3,7 @@ namespace bPack;
 
 use \FastRoute;
 
-class Router implements Protocol\Router {
+class Router implements Protocol\Router, Protocol\Module {
     protected Foundation $app;
 
     protected FastRoute\RouteCollector $routes;
@@ -15,23 +15,30 @@ class Router implements Protocol\Router {
 
     const DefaultHandlerController = "\bPack\Controller\DefaultHandler";
 
-    public function __construct(Foundation $app) {
+    // as module
+    public function getIdentitifer():string {
+        return "router";
+    }
+
+    public function setApplication(Foundation $app): void {
         $this->app = $app;
 
+        $shouldAutoload = $_ENV["ROUTER_AUTOLOAD"] ?? true;
+        $shouldAutoload && $this->loadRoutes();
+
+        $app->config->required(["ROUTER_ROUTES", "ROUTER_AUTOLOAD"]);
+    }
+
+    //
+    public function __construct() {
         $this->routes = new FastRoute\RouteCollector(
             new FastRoute\RouteParser\Std,
             new FastRoute\DataGenerator\GroupCountBased
         );
-
-        $shouldAutoload = $this->app->config->get("router.autoloadRoutes", true);
-        $shouldAutoload && $this->loadRoutes();
     }
 
     public function loadRoutes() {
-        $route_file = $this->app->config->getPath(
-            "router.routesFile",
-            "{{ rootDir }}/config/routes.php"
-        );
+        $route_file = $this->app->rootpath($_ENV["ROUTER_ROUTES"] ?? "config/routes.php");
 
         //
         $mux = new Router\Mux($this->routes);
