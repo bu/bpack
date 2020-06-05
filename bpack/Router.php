@@ -57,19 +57,13 @@ class Router implements Protocol\Router, Protocol\Module {
         switch($dispatchResult[0]) {
             case Router::NOT_FOUND:
                 $handler = [
-                    $this->app->config->get(
-                        "router.notFoundHandler",
-                        Router::DefaultHandlerController . "#notFound"
-                    )
+                    $_ENV["ROUTER_NOTFOUND_HANDLER"] ?? self::DefaultHandlerController . "#notFound"
                 ];
             break;
 
             case Router::METHOD_NOT_ALLOWED:
                 $handler = [
-                    $this->app->config->get(
-                        "router.methodNotAllowedHandler",
-                        Router::DefaultHandlerController . "#notFound"
-                    )
+                    $_ENV["ROUTER_NOTALLOWED_HANDLER"] ?? self::DefaultHandlerController . "#methodNotAllowed"
                 ];
 
                 $params = [
