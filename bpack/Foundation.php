@@ -7,6 +7,7 @@ class Foundation
     public string $appDir;
 
     final function rootpath($path = null):string {
+        $path ??= "";
         return realpath($this->appDir . $path);
     }
 
