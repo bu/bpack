@@ -1,6 +1,6 @@
 {
-    "name": "bu/risu-storage",
-    "description": "A personal information management",
+    "name": "bu/bpack",
+    "description": "A simple framework that provides foundation for building web app.",
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -14,10 +14,9 @@
         "nikic/fast-route": "^2.0@dev",
         "vlucas/phpdotenv": "^5.0@dev"
     },
-	"autoload": {
-		"psr-4": {
-			"App\\": "app/",
-			"bPack\\": "bpack/"
-		}
-	}
+    "autoload": {
+        "psr-4": {
+            "bPack\\": "bpack/"
+        }
+    }
 }
