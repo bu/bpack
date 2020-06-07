@@ -28,7 +28,7 @@ class Foundation
 
     public function isDevMode(): bool
     {
-        return (strtoupper($_ENV["ENV"]) == "dev");
+        return (strtoupper($_ENV["ENV"]) == "DEV");
     }
 
     public function terminate():void {
