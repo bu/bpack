@@ -7,8 +7,12 @@ class Foundation
     public string $appDir;
 
     final function rootpath($path = null):string {
+        if(is_null($path) ) {
+            return $this->appDir;
+        }
+
         $path ??= "";
-        return realpath($this->appDir . $path);
+        return $this->appDir . "/" . $path;
     }
 
     public function __construct(string $appDir)
