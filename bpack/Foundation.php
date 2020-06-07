@@ -4,18 +4,19 @@ namespace bPack;
 class Foundation
 {
     public \Dotenv\Dotenv $config;
+    public string $appDir;
 
     final function rootpath($path = null):string {
-        if($path === null) {
-            return realpath(__DIR__ . "/../");
-        }
-
-        return realpath(__DIR__ . "/../" . $path);
+        return realpath($this->appDir . $path);
     }
 
-    public function __construct($options = array())
+    public function __construct(string $appDir)
     {
-        $this->config = \Dotenv\Dotenv::createImmutable( $this->rootpath() );
+        // push
+        $this->appDir = $appDir;
+
+        // load environment variables
+        $this->config = \Dotenv\Dotenv::createImmutable($appDir);
         $this->config->load();
         $this->config->required(["TIMEZONE", "ENV"]);
     }
