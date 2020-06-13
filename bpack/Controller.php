@@ -23,4 +23,23 @@ class Controller implements Protocol\Controller {
         call_user_func_array([$this, $methodName], $params);
         method_exists($this, "afterPage") && $this->afterPage();
     }
+
+    // magic calls
+    public function __get(string $var_name) {
+        // if first character is not uppercase, then we should throw exception
+        if($var_name[0] != strtoupper($var_name[0])) {
+            throw new \Exception("[Controller] request access to an undefined property on controller class.");
+        }
+
+        // build class name
+        $className = "\App\\Model\\{$var_name}";
+
+        // if uppercase, then we firstly think this is a Model class
+        try {
+            $this->{$var_name} = new $className;
+            return $this->{$var_name};
+        } catch(\Throwable $e) {
+            throw new \Exception("[Controller] request access to an undefined property ({$var_name}) on controller class.");
+        }
+    }
 }
