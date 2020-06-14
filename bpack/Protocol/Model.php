@@ -2,7 +2,18 @@
 
 namespace bPack\Protocol;
 
+use \PDO;
+
 interface Model {
+    // get database connection
+    public function getConnection():PDO;
+    
+    // get model info
+    public function getSchema():array;
+    public function getSchemaName():string;
+    public function getTablename():string;
+
+    // creation
     public function create(array $newData):bool;
     public function new():ModelEntity;
 

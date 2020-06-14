@@ -6,4 +6,5 @@ interface ModelEntity {
     public function save():bool;
     public function update(array $updatedData):bool;
     public function destroy():bool;
+    public function unwrap():array;
 }
