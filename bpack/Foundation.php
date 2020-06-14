@@ -24,6 +24,7 @@ class Foundation
         $this->config = \Dotenv\Dotenv::createImmutable($appDir);
         $this->config->load();
         $this->config->required(["TIMEZONE", "ENV"]);
+    
     }
 
     public function isDevMode(): bool
@@ -55,5 +56,10 @@ class Foundation
         unset($this->{$mod->getIdentitifer()});
 
         return true;
+    }
+
+    // request undefined variables
+    public function __get(string $key) {
+        throw new \Exception("[Foundation] Request undefined property ({$key}), maybe you haven't loaded the modules?");
     }
 }
