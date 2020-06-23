@@ -26,7 +26,7 @@ class Router implements Protocol\Router, Protocol\Module {
         $shouldAutoload = $_ENV["ROUTER_AUTOLOAD"] ?? true;
         $shouldAutoload && $this->loadRoutes();
 
-        $app->config->required(["ROUTER_ROUTES", "ROUTER_AUTOLOAD"]);
+        $app->config->required(["ROUTER_ROUTES"]);
     }
 
     //
