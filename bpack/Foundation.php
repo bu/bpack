@@ -6,6 +6,8 @@ class Foundation
     public \Dotenv\Dotenv $config;
     public string $appDir;
 
+    static $instance = null;
+
     final function rootpath($path = null):string {
         if(is_null($path) ) {
             return $this->appDir;
@@ -27,7 +29,24 @@ class Foundation
 
         // timezone setting
         date_default_timezone_set($_ENV["TIMEZONE"] ?? "UTC");
-    
+
+        // singleton setting
+        $singletonDisabledConfig = $_ENV["FOUNDATION_SINGLETON"] ?? "";
+
+        if($singletonDisabledConfig !== "false") {
+            self::$instance = $this;
+        }
+    }
+
+    static public function getInstance():Foundation {
+        //
+        $singletonDisabledConfig = $_ENV["FOUNDATION_SINGLETON"] ?? "";
+
+        if($singletonDisabledConfig === "false") {
+            throw new \Exception("[Foundation] Singleton method is disabled.");
+        }
+
+        return self::$instance;
     }
 
     public function isDevMode(): bool
