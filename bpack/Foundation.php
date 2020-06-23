@@ -23,7 +23,10 @@ class Foundation
         // load environment variables
         $this->config = \Dotenv\Dotenv::createImmutable($appDir);
         $this->config->load();
-        $this->config->required(["TIMEZONE", "ENV"]);
+        $this->config->required(["ENV"]);
+
+        // timezone setting
+        date_default_timezone_set($_ENV["TIMEZONE"] ?? "UTC");
     
     }
 
