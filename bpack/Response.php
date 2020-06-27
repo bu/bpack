@@ -5,9 +5,23 @@ class Response implements Protocol\Response {
     protected int $status = 200;
     protected ?Protocol\ResponseRenderer $renderer = null;
 
+    use Protocol\HookTrait;
+
+    // for hooktrait
+    public function getHooks():array {
+        return [
+            "beforeSend"
+        ];
+    }
+
     public function send():void {
         http_response_code($this->status);
         header("Content-Type: " . $this->renderer->getContentType());
+
+        //run hook here
+        $this->runHook("beforeSend");
+
+        // then send the response
         echo $this->renderer->render();
     }
 
