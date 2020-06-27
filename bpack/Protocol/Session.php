@@ -2,10 +2,10 @@
 namespace bPack\Protocol;
 
 interface Session {
-    public function __construct(Protocol\SessionStorage $storage);
+    public function __construct(SessionStorage $storage);
     public function getSessionName(): string;
 
-    public function start(Protocol\Request $req, Protocol\Response $res):Session;
+    public function start(Request $req, Response $res):Session;
 
     public function set(string $key, $value):Session;
     public function get(string $key, $default_value = null);

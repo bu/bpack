@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace bPack;
 
-use bPack\Protocol;
-
 class Session implements Protocol\Session, Protocol\Module {
     protected bool $initialized = false;
     protected ?string $sessionId = null;
