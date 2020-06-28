@@ -38,8 +38,9 @@ class Controller implements Protocol\Controller {
         try {
             $this->{$var_name} = new $className($this->app);
             return $this->{$var_name};
-        } catch(\Throwable $e) {
-            throw new \Exception("[Controller] request access to an undefined property ({$var_name}) on controller class.");
-        }
+		} catch(\Throwable $e) {
+			// if exception here means something wrong
+            throw new \Exception("[Controller] request access to an undefined property ({$var_name}) on controller class. (maybe related to: {$e})");
+        } 
     }
 }
