@@ -49,7 +49,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
             return true;
         }
 
-        return isset($this->outSchemaData[$offsetf]);
+        return isset($this->outSchemaData[$offset]);
     }
 
     public function offsetGet($offset) {
