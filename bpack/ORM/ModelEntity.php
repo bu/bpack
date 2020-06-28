@@ -27,13 +27,13 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 
         // first we should get clean entity based on schema
         $this->data = $this->model->getSchema();
-        $this->oldData = $this->model->getSchema();
+        $this->rowData = $this->model->getSchema();
 
         // only process those fields in schema
         foreach($newData as $k => $v) {
             if(!isset($this->data[$k]) ) continue;
             $this->data[$k] = $v;
-            $this->oldData[$k] = $v;
+            $this->rowData[$k] = $v;
         }
         
         // if we get input id
@@ -127,7 +127,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 
         $updatedData = [];
         foreach($this->data as $k => $v) {
-            if($v != $this->oldData[$k]) {
+            if($v != $this->rowData[$k]) {
                $updatedData[$k] = $v; 
             }
         }
