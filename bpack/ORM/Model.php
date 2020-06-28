@@ -15,8 +15,13 @@ abstract class Model implements Protocol\Model {
 
     public function getConnection():\PDO {
         return $this->db->getConnection();
-    }
+	}
 
+	// to register hook on entity
+	public function registerEntityHook(ModelEntity $entity):void {
+		return;
+	}
+	
     public function getSchemaName():string {
         return get_class($this);
     }

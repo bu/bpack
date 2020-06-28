@@ -6,8 +6,11 @@ use \PDO;
 
 interface Model {
     // get database connection
-    public function getConnection():PDO;
-    
+	public function getConnection():PDO;
+
+	// register entity hook
+	public function registerEntityHook(ModelEntity $entity):void;
+
     // get model info
     public function getSchema():array;
     public function getSchemaName():string;

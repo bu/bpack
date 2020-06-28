@@ -3,14 +3,27 @@ namespace bPack\ORM;
 
 use \bPack\Protocol;
 use \ArrayAccess;
+use bPack\Protocol\HookTrait;
 
 class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
     protected ?int $id = null;
     protected Protocol\Model $model;
     protected array $data;
     protected array $rowData;
-    protected array $outSchemaData = array();
+	protected array $outSchemaData = array();
 
+	use HookTrait;
+
+	// for hooktrait
+	public function getHooks(): array
+	{
+		return [
+			"beforeSave",
+			"afterDataFeed"
+		];
+	}
+	
+	// for magic method
     public function __get(string $key) {
         return $this->offsetGet($key);
     }
@@ -23,7 +36,8 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
         Protocol\Model $model, 
         array $newData = array()
     ) {
-        $this->model = $model;
+		$this->model = $model;
+		$model->registerEntityHook($this); 
 
         // first we should get clean entity based on schema
         $this->data = $this->model->getSchema();
@@ -34,7 +48,10 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
             if(!isset($this->data[$k]) ) continue;
             $this->data[$k] = $v;
             $this->rowData[$k] = $v;
-        }
+		}
+
+		// hook
+		$this->runHook("afterDataFeed");
         
         // if we get input id
         if(isset($newData["id"])) {
@@ -83,7 +100,9 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
     }
 
     //
-    public function save():bool {
+	public function save():bool {
+		$this->runHook("beforeSave");
+
         if(is_null($this->id) ) {
             return $this->doCreate();
         }

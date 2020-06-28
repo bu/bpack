@@ -38,6 +38,11 @@ trait HookTrait {
             throw new \Exception("[" . getclass($this) . "] Hook {$hookIdentifier} not exists.");
         }
 
+		//  if there's no hook, then assue done.                                                                                                                     
+		if(!isset($this->hooks[$hookIdentifier])) {                                                                    
+			return true;
+		}
+
         foreach($this->hooks[$hookIdentifier] as $hookfunc) {
             $hookfunc($this);
         }
