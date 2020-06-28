@@ -18,7 +18,7 @@ abstract class Model implements Protocol\Model {
 	}
 
 	// to register hook on entity
-	public function registerEntityHook(ModelEntity $entity):void {
+	public function registerEntityHook(Protocol\ModelEntity $entity):void {
 		return;
 	}
 	
