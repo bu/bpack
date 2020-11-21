@@ -16,6 +16,11 @@ class Response implements Protocol\Response {
         ];
     }
 
+    public function redirect(string $uri): void {
+        header('Location: ' . $uri, true, 302);
+        exit;
+    }
+
     public function send():void {
         http_response_code($this->status);
         header("Content-Type: " . $this->renderer->getContentType());
