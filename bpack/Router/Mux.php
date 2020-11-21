@@ -4,8 +4,10 @@ namespace bPack\Router;
 use \FastRoute;
 
 class Mux {
-    protected FastRoute\RouteCollector $fastroute;
-    protected array $currentRouteMiddleware = [];
+    // FastRoute\RouteCollector
+    protected $fastroute;
+    // array
+    protected $currentRouteMiddleware = [];
 
     public function __construct(FastRoute\RouteCollector &$r) {
         $this->fastroute = $r;

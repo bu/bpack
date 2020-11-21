@@ -17,8 +17,8 @@ class Request implements Protocol\Request {
 
     protected function extractValue(int $method, string $key, $default_value = null, $options = null) {
 
-        $options ??= [];
-        $options["filter"] ??= FILTER_SANITIZE_STRING;
+        $options = $option ?? [];
+        $options["filter"] =  $options["filter"] ?? FILTER_SANITIZE_STRING;
 
         return filter_input($method, $key, $options["filter"]) ?? $default_value;
     }

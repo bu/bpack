@@ -4,7 +4,8 @@ namespace bPack\Response;
 use \bPack;
 
 class JSON implements bPack\Protocol\ResponseRenderer {
-    private array $data;
+    // array
+    private $data;
 
     public function __construct(array $data) {
         $this->data = $data;

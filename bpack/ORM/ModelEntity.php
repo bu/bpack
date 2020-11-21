@@ -6,11 +6,16 @@ use \ArrayAccess;
 use bPack\Protocol\HookTrait;
 
 class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
-    protected ?int $id = null;
-    protected Protocol\Model $model;
-    protected array $data;
-    protected array $rowData;
-	protected array $outSchemaData = array();
+    // ?int
+    protected $id = null;
+    // Protocol\Model
+    protected $model;
+    // array
+    protected $data;
+    // array
+    protected $rowData;
+    // array
+	protected $outSchemaData = array();
 
 	use HookTrait;
 
@@ -22,7 +27,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 			"afterDataFeed"
 		];
 	}
-	
+
 	// for magic method
     public function __get(string $key) {
         return $this->offsetGet($key);
@@ -33,11 +38,11 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
     }
 
     public function __construct(
-        Protocol\Model $model, 
+        Protocol\Model $model,
         array $newData = array()
     ) {
 		$this->model = $model;
-		$model->registerEntityHook($this); 
+		$model->registerEntityHook($this);
 
         // first we should get clean entity based on schema
         $this->data = $this->model->getSchema();
@@ -52,7 +57,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 
 		// hook
 		$this->runHook("afterDataFeed");
-        
+
         // if we get input id
         if(isset($newData["id"])) {
             $this->id = $newData["id"];
@@ -84,7 +89,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 
         throw new \Exception("[Model Entity] can not get undefineded data");
     }
-    
+
     public function offsetSet($offset, $value) {
         if(isset($this->data[$offset])) {
             $this->data[$offset] = $value;
@@ -112,11 +117,13 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 
     protected function doCreate():bool {
         $sql = "INSERT INTO %s (%s) VALUES (%s);";
-        
+
         $fields = implode(", ", array_keys($this->data)) . ",updated_at,created_at";
 
         $value_placeholders = implode(", ", array_map(
-                fn($i) => ":{$i}",
+                function($i) {
+                    return ":{$i}";
+                },
                 array_keys($this->data)
             )
         ) . ", :updated_at, :created_at";
@@ -129,7 +136,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
         // build binding data
         $bindingData = [];
         foreach($this->data as $k => $v) $bindingData[":" . $k] = $v;
-        
+
         return $stmt->execute(array_merge(
             $bindingData,
             [
@@ -147,7 +154,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
         $updatedData = [];
         foreach($this->data as $k => $v) {
             if($v != $this->rowData[$k]) {
-               $updatedData[$k] = $v; 
+               $updatedData[$k] = $v;
             }
         }
 
@@ -163,9 +170,9 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
             $bindingData[":" . $k . "_update_field"] = $v;
         }
         $sql[] = implode(", ", $updataExpr);
-        
+
         $sql[] = "WHERE id = " . $this->id;
-    
+
         $executed_sql = implode(" ", $sql);
 
         $dbConn = $this->model->getConnection();

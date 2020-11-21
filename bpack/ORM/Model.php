@@ -5,8 +5,10 @@ use \bPack\Protocol;
 use \bPack;
 
 abstract class Model implements Protocol\Model {
-    protected bPack\Foundation $app;
-    protected bPack\Database $db;
+    // bPack\Foundation
+    protected  $app;
+    // bPack\Database
+    protected  $db;
 
     public function __construct(bPack\Foundation $app) {
         $this->app = $app;
@@ -21,7 +23,7 @@ abstract class Model implements Protocol\Model {
 	public function registerEntityHook(Protocol\ModelEntity $entity):void {
 		return;
 	}
-	
+
     public function getSchemaName():string {
         return get_class($this);
     }

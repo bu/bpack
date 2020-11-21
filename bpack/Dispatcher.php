@@ -3,8 +3,8 @@ namespace bPack;
 
 use \Reflection, \ReflectionClass;
 class Dispatcher implements Protocol\Dispatcher, Protocol\Module {
-    protected Foundation $app;
-
+    // Foundation
+    protected  $app;
 
     // as module
     public function getIdentitifer():string {
@@ -43,7 +43,9 @@ class Dispatcher implements Protocol\Dispatcher, Protocol\Module {
             }
 
             $currentChainTarget = $stop;
-        }, $route->handler), fn($r) => !is_null($r));
+        }, $route->handler), function($r) {
+            return !is_null($r);
+        });
 
         // dessumble the handler (add before page after page then done)
         $route->handler[] = new TargetWrapperMiddleware(
@@ -62,14 +64,18 @@ class Dispatcher implements Protocol\Dispatcher, Protocol\Module {
 }
 
 class TargetWrapperMiddleware implements Protocol\Middleware {
-    private string $targetClass;
-    private string $targetAction;
-    private array  $targetActionParams;
-    private array  $targetActionCallParams;
-
-    private Protocol\Controller $targetInstance;
-
-    private Foundation $app;
+    // string
+    private $targetClass;
+    // string
+    private $targetAction;
+    // array
+    private $targetActionParams;
+    // array
+    private $targetActionCallParams;
+    // Protocol\Controller
+    private $targetInstance;
+    // Foundation
+    private  $app;
 
     public function __construct(Foundation $app, string $wrapMethod, array $params) {
         $this->app = $app;
@@ -122,7 +128,8 @@ class PipelineNoResponseErrorMiddleware implements Protocol\Middleware {
 }
 
 class DispatchPipeline implements Protocol\Pipeline {
-    private array $items;
+    // array
+    private  $items;
 
     public function __construct(array $items, Protocol\Middleware $fallback) {
         $this->items = $items;

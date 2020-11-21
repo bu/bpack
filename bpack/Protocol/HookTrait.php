@@ -3,7 +3,8 @@
 namespace bPack\Protocol;
 
 trait HookTrait {
-    protected array $hooks = [];
+    // array
+    protected $hooks = [];
 
     abstract public function getHooks():array;
 
@@ -13,7 +14,7 @@ trait HookTrait {
             throw new \Exception("["  . getclass($this) . "] Hook {$hookIdentifier} not exists.");
         }
 
-        $this->hooks[$hookIdentifier] ??= [];
+        $this->hooks[$hookIdentifier] = $this->hooks[$hookIdentifier] ?? [];
         return array_push($this->hooks[$hookIdentifier], $method);
     }
 
@@ -38,8 +39,8 @@ trait HookTrait {
             throw new \Exception("[" . getclass($this) . "] Hook {$hookIdentifier} not exists.");
         }
 
-		//  if there's no hook, then assue done.                                                                                                                     
-		if(!isset($this->hooks[$hookIdentifier])) {                                                                    
+		//  if there's no hook, then assue done.
+		if(!isset($this->hooks[$hookIdentifier])) {
 			return true;
 		}
 

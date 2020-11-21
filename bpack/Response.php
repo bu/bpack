@@ -2,8 +2,10 @@
 namespace bPack;
 
 class Response implements Protocol\Response {
-    protected int $status = 200;
-    protected ?Protocol\ResponseRenderer $renderer = null;
+    // int
+    protected $status = 200;
+    // ?Protocol\ResponseRenderer
+    protected  $renderer = null;
 
     use Protocol\HookTrait;
 

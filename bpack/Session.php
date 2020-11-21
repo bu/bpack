@@ -2,10 +2,14 @@
 namespace bPack;
 
 class Session implements Protocol\Session, Protocol\Module {
-    protected bool $initialized = false;
-    protected ?string $sessionId = null;
-    protected ?array $sessionData = null;
-    protected array $cookieOptions = [];
+    // bool
+    protected  $initialized = false;
+    // ?string
+    protected $sessionId = null;
+    // ?array
+    protected $sessionData = null;
+    // array
+    protected $cookieOptions = [];
 
     // module init
     public function __construct(Protocol\SessionStorage $storage) {
@@ -32,7 +36,7 @@ class Session implements Protocol\Session, Protocol\Module {
         return $_ENV["SESSION_NAME"] ?? "bPack_Session";
     }
 
-    public function start(Protocol\Request $req, Protocol\Response $res):Session {
+    public function start(Protocol\Request $req, Protocol\Response $res):Protocol\Session {
         // try to get session id from cookie
         // if not we should create one
         $this->sessionId = $req->cookie( $this->getSessionName(), null) ?? $this->getSessionId();
@@ -50,7 +54,7 @@ class Session implements Protocol\Session, Protocol\Module {
         return $this;
     }
 
-    public function set(string $key, $value):Session {
+    public function set(string $key, $value):Protocol\Session {
         // if we have no session data, we should sync it with storage
         $this->sessionData[$key] = $value;
         return $this;

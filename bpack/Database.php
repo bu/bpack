@@ -4,8 +4,10 @@ namespace bPack;
 use \PDO;
 
 class Database implements Protocol\Module {
-    protected Foundation $app;
-    protected \PDO $db;
+    // Foundation
+    protected $app;
+    // \PDO
+    protected $db;
 
     public function getIdentitifer():string {
         return "db";

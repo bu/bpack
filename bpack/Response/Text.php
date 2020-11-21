@@ -4,7 +4,8 @@ namespace bPack\Response;
 use \bPack;
 
 class Text implements bPack\Protocol\ResponseRenderer {
-    private string $data;
+    // string
+    private $data;
 
     public function __construct(string $data) {
         $this->data = $data;

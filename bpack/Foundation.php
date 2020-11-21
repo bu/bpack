@@ -3,8 +3,10 @@ namespace bPack;
 
 class Foundation
 {
-    public \Dotenv\Dotenv $config;
-    public string $appDir;
+    // \Dotenv\Dotenv
+    public $config;
+    // string
+    public $appDir;
 
     static $instance = null;
 
@@ -13,7 +15,7 @@ class Foundation
             return $this->appDir;
         }
 
-        $path ??= "";
+        $path = $path ?? "";
         return $this->appDir . "/" . $path;
     }
 

@@ -4,7 +4,8 @@ namespace bPack\Packages;
 use \bPack;
 
 class Routing implements bPack\Protocol\Module {
-    protected Foundation $app;
+    // Foundation
+    protected $app;
 
     public function getIdentitifer():string {
         return "routing";

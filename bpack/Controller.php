@@ -2,11 +2,15 @@
 namespace bPack;
 
 class Controller implements Protocol\Controller {
-    protected Foundation $app;
-    protected bool $initialized = false;
+    // Foundation
+    protected  $app;
+    // bool
+    protected $initialized = false;
 
-    protected Protocol\Request $req;
-    protected Protocol\Response $res;
+    // Protocol\Request
+    protected $req;
+    // Protocol\Response
+    protected $res;
 
     public function __construct(Foundation $app) {
         $this->app = $app;
@@ -41,6 +45,6 @@ class Controller implements Protocol\Controller {
 		} catch(\Throwable $e) {
 			// if exception here means something wrong
             throw new \Exception("[Controller] request access to an undefined property ({$var_name}) on controller class. (maybe related to: {$e})");
-        } 
+        }
     }
 }

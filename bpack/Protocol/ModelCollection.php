@@ -4,7 +4,7 @@ namespace bPack\Protocol;
 
 interface ModelCollection {
     public function first():?ModelEntity;
-    
+
     public function destroy():bool;
     public function update(array $updatedData):bool;
 

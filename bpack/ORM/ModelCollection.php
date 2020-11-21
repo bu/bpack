@@ -5,18 +5,24 @@ use \bPack\Protocol;
 use \PDO;
 
 class ModelCollection implements Protocol\ModelCollection {
-    protected Protocol\Model $model;
-    
-    // query to build condition 
-    protected array $where = array();
-    protected array $orderBy = array();
-    protected array $select = array("*");
-    
-    protected int $limit = 100;
-    protected int $offset = 0;
-    
+    // Protocol\Model
+    protected  $model;
+
+    // query to build condition
+    // array
+    protected $where = array();
+    // array
+    protected $orderBy = array();
+    // array
+    protected $select = array("*");
+    // int
+    protected $limit = 100;
+    // int
+    protected $offset = 0;
+
     // store executed result
-    protected array $resultset = array();
+    // array
+    protected $resultset = array();
 
     public function __construct(Protocol\Model $model, array $whereCond = array()) {
         $this->model = $model;
@@ -37,7 +43,7 @@ class ModelCollection implements Protocol\ModelCollection {
 
     public function getBindingData():array {
         $bindingData = [];
-        
+
         foreach($this->where as $n) {
             if(!is_array($n)) continue;
             $bindingData[":" . $n[0]] = $n[2];
@@ -56,27 +62,29 @@ class ModelCollection implements Protocol\ModelCollection {
 
         if(sizeof($this->orderBy) > 0) {
             $sql[] = "ORDER BY " . implode(", ", array_map(
-                fn($n) => "$n " . $this->orderBy[$n],
+                function($n) {
+                    return "$n " . $this->orderBy[$n];
+                },
                 array_keys($this->orderBy)
             ));
         }
 
         $sql[] = "LIMIT " . $this->limit;
         $sql[] = "OFFSET " . $this->offset;
-        
+
         $executed_sql = implode(" ", $sql);
-    
+
         // send to DB
         $dbConn = $this->model->getConnection();
         $stmt = $dbConn->prepare($executed_sql);
-        
+
         //
         $result = $stmt->execute( $this->getBindingData() );
 
         if(!$result) {
             throw new \Exception("[Database Model] Cannot query database.");
         }
-        
+
         // TODO if large batch, we should use streaming to get data one by one
         $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -84,19 +92,19 @@ class ModelCollection implements Protocol\ModelCollection {
             return new ModelEntity($this->model, $res);
         }, $resultset);
     }
-    
-    public function first():?ModelEntity {
+
+    public function first():?Protocol\ModelEntity {
         $this->limit(1)->doSelect();
         return $this->resultset[0] ?? null;
     }
-    
+
     public function destroy():bool {
         $sql = [];
 
         $sql[] = "DELETE FROM";
         $sql[] = $this->model->getTablename();
         $this->buildWhere($sql);
-    
+
         $executed_sql = implode(" ", $sql);
 
         $dbConn = $this->model->getConnection();
@@ -105,7 +113,7 @@ class ModelCollection implements Protocol\ModelCollection {
     }
 
     public function update(array $updatedData):bool {
-    
+
         if(sizeof($updatedData) == 0) {
             return false;
         }
@@ -124,7 +132,7 @@ class ModelCollection implements Protocol\ModelCollection {
         $sql[] = implode(", ", $updataExpr);
 
         $this->buildWhere($sql);
-    
+
         $executed_sql = implode(" ", $sql);
 
         $dbConn = $this->model->getConnection();
@@ -132,22 +140,22 @@ class ModelCollection implements Protocol\ModelCollection {
         return $stmt->execute( array_merge($this->getBindingData(), $bindingData) );
     }
 
-    public function limit(int $limitCount):ModelCollection {
+    public function limit(int $limitCount):Protocol\ModelCollection {
         $this->limit = $limitCount;
         return $this;
     }
 
-    public function offest(int $offsetValue):ModelCollection {
+    public function offest(int $offsetValue):Protocol\ModelCollection {
         $this->offset = $offsetValue;
         return $this;
     }
 
-    public function orderBy(array $orderByExpression):ModelCollection {
+    public function orderBy(array $orderByExpression):Protocol\ModelCollection {
         $this->orderBy = $orderByExpression;
         return $this;
     }
 
-    public function select(string ...$columns):ModelCollection {
+    public function select(string ...$columns):Protocol\ModelCollection {
         $this->select = $columns;
         return $this;
     }

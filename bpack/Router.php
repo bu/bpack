@@ -4,10 +4,13 @@ namespace bPack;
 use \FastRoute;
 
 class Router implements Protocol\Router, Protocol\Module {
-    protected Foundation $app;
+    // Foundation
+    protected  $app;
 
-    protected FastRoute\RouteCollector $routes;
-    protected FastRoute\Dispatcher\GroupCountBased $dispatcher;
+    // FastRoute\RouteCollector
+    protected  $routes;
+    // FastRoute\Dispatcher\GroupCountBased
+    protected $dispatcher;
 
     const NOT_FOUND = FastRoute\Dispatcher::NOT_FOUND;
     const METHOD_NOT_ALLOWED = FastRoute\Dispatcher::METHOD_NOT_ALLOWED;
