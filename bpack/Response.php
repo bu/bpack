@@ -52,6 +52,11 @@ class Response implements Protocol\Response {
         return $this;
     }
 
+    public function setRenderer(Protocol\ResponseRenderer $renderer):Protocol\Response {
+        $this->renderer = $renderer;
+        return $this;
+    }
+
     public function __call(string $method, array $args):Protocol\Response {
         call_user_func_array([$this->renderer, $method], $args);
         return $this;
