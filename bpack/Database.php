@@ -26,6 +26,11 @@ class Database implements Protocol\Module {
         $this->db = new PDO($_ENV["DB_DSN"], $_ENV["DB_USER"], $_ENV["DB_PASSWORD"]);
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        if(isset($_ENV["DB_INITAL_SQL"])) {
+            $this->db->exec($_ENV["DB_INITAL_SQL"]);
+        }
+
+
         return $this->db;
     }
 }
