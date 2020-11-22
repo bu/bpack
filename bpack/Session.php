@@ -48,12 +48,12 @@ class Session implements Protocol\Session, Protocol\Module {
 
         $res->registerHook("beforeRedirect", function(Response &$res) use ($sess) {
             $sess->sync();
-            setcookie($this->getSessionName(), $this->sessionId, $this->cookieOptions);
+            setcookie($this->getSessionName(), $this->sessionId, $this->cookieOptions["expires"]);
         });
 
         $res->registerHook("beforeSend", function(Response &$res) use ($sess) {
             $sess->sync();
-            setcookie($this->getSessionName(), $this->sessionId, $this->cookieOptions);
+            setcookie($this->getSessionName(), $this->sessionId, $this->cookieOptions["expires"]);
         });
 
         return $this;
