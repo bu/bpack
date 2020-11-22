@@ -12,11 +12,15 @@ class Response implements Protocol\Response {
     // for hooktrait
     public function getHooks():array {
         return [
-            "beforeSend"
+            "beforeSend",
+            "beforeRedirect"
         ];
     }
 
     public function redirect(string $uri): void {
+        //run hook here
+        $this->runHook("beforeRedirect");
+        // actual redirect
         header('Location: ' . $uri, true, 302);
         exit;
     }

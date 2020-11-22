@@ -46,6 +46,11 @@ class Session implements Protocol\Session, Protocol\Module {
         // write cookie about session id
         $sess = $this;
 
+        $res->registerHook("beforeRedirect", function(Response &$res) use ($sess) {
+            $sess->sync();
+            setcookie($this->getSessionName(), $this->sessionId, $this->cookieOptions);
+        });
+
         $res->registerHook("beforeSend", function(Response &$res) use ($sess) {
             $sess->sync();
             setcookie($this->getSessionName(), $this->sessionId, $this->cookieOptions);
