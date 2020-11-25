@@ -140,8 +140,8 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
         return $stmt->execute(array_merge(
             $bindingData,
             [
-                ":updated_at" => date("r"),
-                ":created_at" => date("r"),
+                ":updated_at" => date("Y-m-d H:i:s"),
+                ":created_at" => date("Y-m-d H:i:s"),
             ]
         ));
     }

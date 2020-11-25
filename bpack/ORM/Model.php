@@ -30,7 +30,7 @@ abstract class Model implements Protocol\Model {
 
     // creation process
     public function create(array $newData):bool {
-        $entity = new ModelEntity($this, $data);
+        $entity = new ModelEntity($this, $newData);
         return $entity->save();
     }
 
