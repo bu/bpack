@@ -15,6 +15,17 @@ class Request implements Protocol\Request {
         return $this->extractValue(INPUT_COOKIE, $key, $default_value, $options);
     }
 
+    public function json() {
+        if($_SERVER["REQUEST_METHOD"] != "POST") {
+            return null;
+        }
+
+        $json_input = file_get_contents("php://input");
+        $user_input = json_decode($json_input);
+
+        return $user_input;
+    }
+
     protected function extractValue(int $method, string $key, $default_value = null, $options = null) {
 
         $options = $option ?? [];
