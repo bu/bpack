@@ -67,11 +67,11 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 
     // ArrayAccess interface
     public function offsetExists($offset) : bool {
-        if(isset($this->data[$offset])) {
+        if(array_key_exists($offset, $this->data)) {
             return true;
         }
 
-        return isset($this->outSchemaData[$offset]);
+        return array_key_exists($offset, $this->outSchemaData);
     }
 
     public function id() {
@@ -83,11 +83,11 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
             return $this->_id;
         }
 
-        if(isset($this->data[$offset])) {
+        if(array_key_exists($offset, $this->data)) {
             return $this->data[$offset];
         }
 
-        if(isset($this->outSchemaData[$offset])) {
+        if(array_key_exists($offset, $this->outSchemaData)) {
             return $this->outSchemaData[$offset];
         }
 
