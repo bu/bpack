@@ -4,7 +4,7 @@ namespace bPack\ORM;
 use \bPack\Protocol;
 use \PDO;
 
-class ModelCollection implements Protocol\ModelCollection {
+class ModelCollection implements Protocol\ModelCollection, \Countable, \Iterator {
     // Protocol\Model
     protected  $model;
 
@@ -22,7 +22,11 @@ class ModelCollection implements Protocol\ModelCollection {
 
     // store executed result
     // array
-    protected $resultset = array();
+    protected $resultset = null;
+
+    // iterator pos
+    // int
+    protected $position = 0;
 
     public function __construct(Protocol\Model $model, array $whereCond = array()) {
         $this->model = $model;
@@ -166,5 +170,44 @@ class ModelCollection implements Protocol\ModelCollection {
         return array_map(function($item) use ($column) {
             return $item[$column];
         }, $this->resultset);
+    }
+
+    // ** countable
+    public function count():int {
+        return sizeof($this->resultset);
+    }
+
+    // iterator
+    public function rewind() {
+        $this->position = 0;
+
+        if(is_null($this->resultset)) {
+            $this->doSelect();
+        }
+    }
+
+    public function current() {
+        return $this->resultset[$this->position];
+    }
+
+    public function key() {
+        return $this->position;
+    }
+
+    public function next() {
+        ++$this->position;
+    }
+
+    public function valid() {
+        return isset($this->resultset[$this->position]);
+    }
+
+    // var_dump
+    public function __debugInfo() {
+        if(is_null($this->resultset)) {
+            $this->doSelect();
+        }
+
+        return $this->resultset;
     }
 }
