@@ -7,7 +7,7 @@ use bPack\Protocol\HookTrait;
 
 class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
     // ?int
-    protected $id = null;
+    protected $_id = null;
     // Protocol\Model
     protected $model;
     // array
@@ -50,7 +50,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 
         // only process those fields in schema
         foreach($newData as $k => $v) {
-            if(!isset($this->data[$k]) ) continue;
+            if(!array_key_exists($k, $this->data) ) continue;
             $this->data[$k] = $v;
             $this->rowData[$k] = $v;
 		}
@@ -60,7 +60,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 
         // if we get input id
         if(isset($newData["id"])) {
-            $this->id = $newData["id"];
+            $this->_id = $newData["id"];
             unset($this->data["id"]);
         }
     }
@@ -74,9 +74,13 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
         return isset($this->outSchemaData[$offset]);
     }
 
+    public function id() {
+        return $this->_id;
+    }
+
     public function offsetGet($offset) {
         if($offset == "id") {
-            return $this->id;
+            return $this->_id;
         }
 
         if(isset($this->data[$offset])) {
@@ -91,8 +95,8 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
     }
 
     public function offsetSet($offset, $value) {
-        if(isset($this->data[$offset])) {
-            $this->data[$offset] = $value;
+        if(array_key_exists($offset, $this->data)) {
+            return $this->data[$offset] = $value;
         }
 
         $this->outSchemaData[$offset] = $value;
@@ -108,7 +112,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
 	public function save():bool {
 		$this->runHook("beforeSave");
 
-        if(is_null($this->id) ) {
+        if(is_null($this->_id) ) {
             return $this->doCreate();
         }
 
@@ -147,7 +151,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
     }
 
     protected function doUpdate():bool {
-        if($this->id === null) {
+        if($this->_id === null) {
             return false;
         }
 
@@ -156,6 +160,10 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
             if($v != $this->rowData[$k]) {
                $updatedData[$k] = $v;
             }
+        }
+
+        if(sizeof($updatedData) == 0) {
+            return false;
         }
 
         $sql = [];
@@ -171,7 +179,7 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
         }
         $sql[] = implode(", ", $updataExpr);
 
-        $sql[] = "WHERE id = " . $this->id;
+        $sql[] = "WHERE id = " . $this->_id;
 
         $executed_sql = implode(" ", $sql);
 
@@ -191,12 +199,12 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
     }
 
     public function destroy():bool {
-        if($this->id === null ) {
+        if($this->_id === null ) {
             return false;
         }
 
-        $sql = 'DELETE FROM "%s" WHERE "id" = %d;';
-        $exeucte_sql = sprintf($sql, $this->model->getTablename(), $this->id);
+        $sql = 'DELETE FROM %s WHERE id = %d;';
+        $exeucte_sql = sprintf($sql, $this->model->getTablename(), $this->_id);
 
         $result = $this->model->getConnection()->exec($exeucte_sql);
 
@@ -208,6 +216,11 @@ class ModelEntity implements Protocol\ModelEntity, ArrayAccess {
     }
 
     public function unwrap(): array {
+        return $this->data;
+    }
+
+    // var_dump
+    public function __debugInfo() {
         return $this->data;
     }
 }
